@@ -134,3 +134,4 @@
 %
 % all_ints_2d([]).
 % all_ints_2d([Arr2dH | Arr2dT]) :- maplist(integer, Arr2dH), all_ints_2d(Arr2dT).
+% -fin-
