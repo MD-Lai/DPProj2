@@ -23,7 +23,7 @@ Puzzle_4x4 = [[0,224,21,168,20],[14,4,2,_,_],[24,1,4,_,3],[2016,7,_,_,8],[25,_,6
 */
 
 /*
-bagof(X, goal(Using, X), X_values_that_make_predicate_true).
+bagof(X, goal(Using, X), X_values_that_make_goal_true).
 */
 % third time lucky
 % attempt 3
@@ -74,7 +74,6 @@ puzzle_solution(Puzzle) :-
 
     /*
     if unbound, bag, apply a row, repeat check until all rows are bound and valid
-    All it needs is !1! correctly ground row and it's entirely set to solve it
     */
     % (ground(Puzzle) ->
     %     % do nothing, puzzle is solved
@@ -104,19 +103,13 @@ diagonals(Rs) :-
 
 /* Checks that diagonals have the same value as the value supplied (Rdi) */
 diagonal([], _). % Base case, bottom right value is same as value supplied
-diagonal([[Rdi|_] | Rt], Rdi) :- % 
+diagonal([[Rdi|_] | Rt], Rdi) :- 
     drop_heads(Rt, Rtd),
     diagonal(Rtd, Rdi)
 .
 
 /* Drops the first value of a list */
 drop_first([_|T], T).
-
-% /* Drops the first value of every row in a list of lists */
-% drop_heads([], []). % Base Case, second argument "returned" as empty list
-% drop_heads([[_|T1] | Tr], [T1|Td]) :- % Gets tail of first row, uses tail as new head
-%     drop_heads(Tr, Td) % Td is the List of the tails of Lists
-% .
 
 /* Drops the first value of every row in a list of lists */
 drop_heads([],[]).
@@ -128,8 +121,20 @@ drop_heads(R, R_h) :-
 
 /* Checks that the sum OR product of a row is equal to the Header value */
 list_sum_or_prod(List) :-
+    % if > some number, has to be product, fill out with factors of that number
     list_sum(List) ; list_prod(List)
 .
+
+sum_between(Low, High, Sum) :-
+    ((Low == High) ->
+        Sum = Low
+    ;
+        New_low is Low + 1,
+        sum_between(New_low, High, New_sum),
+        Sum is Low + New_sum
+    )
+.
+
 
 /* Checks that the sum of the Values of a row is equal to the Header value */
 list_sum([Sum | List]) :-
