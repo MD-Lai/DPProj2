@@ -28,7 +28,7 @@ puzzle_solution(Puzzle) :-
      ************************************/
     % drop first row of Puzzle,
     tail(Puzzle, Rs_h),
-    %drop first column of puzzle, leaving only the puzzle values
+    % drop first column of puzzle, leaving only the puzzle values
     drop_heads(Rs_h, Rs),
 
     /*******************************************
