@@ -15,7 +15,13 @@
 % to make use of the constraint programming predicates
 :- ensure_loaded(library(clpfd)).
 
-/* Main Driver, Generates a solution for the Puzzle */
+/*****************************************************************************
+ * Main Driver, Generates a solution for the Puzzle .                        *
+ * Works by specifying the constraints                                       *
+ * essentially creating a system of linear equations.                        *
+ * Once all constraints are set,                                             *
+ * binds variables that satisfy those constraints                            *
+ *****************************************************************************/
 puzzle_solution(Puzzle) :-
     /***********************************
      * Checks that puzzle is a square  *
