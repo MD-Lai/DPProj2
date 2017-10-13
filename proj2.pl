@@ -72,19 +72,11 @@ puzzle_solution(Puzzle) :-
     maplist(list_sum_or_prod, Rs_h),
     maplist(list_sum_or_prod, Cs_h),
 
+    /**********************************************************************************
+     * Grounds variables according to the constraints                                 *
+     * IF there is only one solution then the constraints will give only one solution *
+     **********************************************************************************/
     maplist(label, Puzzle)
-.
-
-apply_bag(_, []).
-apply_bag(Row, [Row | Bag_t]) :-
-    apply_bag(_, Bag_t)
-.
-
-in_domain_1to9(Row) :-
-    maplist(between(1,9), Row)
-.
-valid_row(Row) :-
-    drop_first(Row, Row_nh), in_domain_1to9(Row_nh), all_distinct(Row_nh), list_sum_or_prod(Row)
 .
 
 /* Primer function for diagonal, passes first value and row through to diagonal */
@@ -115,17 +107,6 @@ list_sum_or_prod(List) :-
     % if > some number, has to be product, fill out with factors of that number
     list_sum(List) ; list_prod(List)
 .
-
-sum_between(Low, High, Sum) :-
-    ((Low == High) ->
-        Sum = Low
-    ;
-        New_low is Low + 1,
-        sum_between(New_low, High, New_sum),
-        Sum is Low + New_sum
-    )
-.
-
 
 /* Checks that the sum of the Values of a row is equal to the Header value */
 list_sum([Sum | List]) :-
