@@ -75,25 +75,25 @@ puzzle_solution(Puzzle) :-
 
 /* Initialises check, passes first value and row through to diagonal */
 diagonals(Rs) :-
-    Rs = [[RDi | _ ] | _ ], diagonal(Rs, RDi)
+    Rs = [[R_d | _ ] | _ ], diagonal(Rs, R_d)
 .
 
-/* Checks that diagonals have the same value as the value supplied (Rdi) */
+/* Checks that diagonals have the same value as the value supplied (R_d) */
 diagonal([], _). % only reaches this case if everything before it is correct
-diagonal([[Rdi|_] | Rt], Rdi) :- % True if Head of current row is same as Rdi
+diagonal([[R_d|_] | Rt], R_d) :- % True if Head of current row is same as R_d
     drop_heads(Rt, Rtd), % Remove first Col of the remaining lists
-    diagonal(Rtd, Rdi) % Check that sub square also has correct diagonals
+    diagonal(Rtd, R_d) % Check that sub square also has correct diagonals
 .
 
 /* Drops the first value of a list */
-tail([_|T], T).
+tail([_|T], T). % no case for empty list because empty list has no "tail"
 
-/* Drops the first value of every row in a list of lists */
+/* Drops the first value of every list in a list of lists */
 drop_heads([],[]).
-drop_heads(R, R_h) :-
-    transpose(R, R_t), % transpose it so first column is now first row
-    tail(R_t, R_tf), % drop the new first row
-    transpose(R_tf, R_h) % transpose back and now the first column is gone
+drop_heads(R, R_nh) :-
+    transpose(R, RT), % transpose it so first column is now first row
+    tail(RT, RT_t), % drop the new first row
+    transpose(RT_t, R_nh) % transpose back and now the first column is gone
 .
 
 /* Checks that the sum OR product of a row is equal to the Header value */
@@ -118,6 +118,7 @@ prod([], _, 1). % Base case, ASSUMING the previous lists were non-empty
 prod([H | T], Rel, Prod) :-
     % Builds up an expression for the product
     prod(T, Rel, Rest), call(Rel, Prod, H*Rest)
-    % equivalent to: Prod (Rel) H*Rest, e.g for #=: Prod #= H*Rest
+    % equivalent to: Prod (Rel) H*Rest, e.g Rel = #=: Prod #= H * Rest
+.
 
 % -fin-
