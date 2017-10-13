@@ -1,14 +1,16 @@
-% Declarative Programming Project 2
-%
-% Der Hann Marvin Lai 754672
-%
-% A Prolog program to solve a maths puzzle
-% The puzzle is to solve a maths square where every row and column is EITHER :
-%     - the sum of the corresponding header
-%     - the multiple to the corresponding header
-% Under constraint that numbers within the same row or column are distinct
-% and the entire diagonal has to be the same number
-% and the domain of the values that aren't headers is in 1..9
+/*****************************************************************************
+ * Declarative Programming Project 2                                         *
+ *                                                                           *
+ * Der Hann Marvin Lai 754672                                                *
+ *                                                                           *
+ * A set of Prolog predicates to solve a maths puzzle                        *
+ * The puzzle is to solve a maths square where each row and column is EITHER:*
+ *    - the sum of the corresponding header                                  *
+ *    - the multiple to the corresponding header                             *
+ * Under constraint that numbers within the same row or column are distinct  *
+ * and the entire diagonal has to be the same number                         *
+ * and the domain of the values that aren't headers is in 1..9               *
+ *****************************************************************************/
 
 % to make use of the constraint programming predicates
 :- ensure_loaded(library(clpfd)).
@@ -32,7 +34,7 @@ puzzle_solution(Puzzle) :-
     /*******************************************
      * Check that values are within the domain *
      *******************************************/
-    % check that the concatenation of Rows can be composed of 1..9
+    % check that the concatenation of Rows (no headers) can be composed of 1..9
     append(Rs, Dom), Dom ins 1..9,
 
     /*********************
@@ -78,9 +80,9 @@ diagonals(Rs) :-
 
 /* Checks that diagonals have the same value as the value supplied (Rdi) */
 diagonal([], _). % only reaches this case if everything before it is correct
-diagonal([[Rdi|_] | Rt], Rdi) :-
-    drop_heads(Rt, Rtd),
-    diagonal(Rtd, Rdi)
+diagonal([[Rdi|_] | Rt], Rdi) :- % True if Head of current row is same as Rdi
+    drop_heads(Rt, Rtd), % Remove first Col of the remaining lists
+    diagonal(Rtd, Rdi) % Check that sub square also has correct diagonals
 .
 
 /* Drops the first value of a list */
@@ -90,7 +92,7 @@ tail([_|T], T).
 drop_heads([],[]).
 drop_heads(R, R_h) :-
     transpose(R, R_t), % transpose it so first column is now first row
-    tail(R_t, R_tf), % drop the new first row (column)
+    tail(R_t, R_tf), % drop the new first row
     transpose(R_tf, R_h) % transpose back and now the first column is gone
 .
 
@@ -101,12 +103,12 @@ list_sum_or_prod(List) :-
 
 /* Checks that the sum of the Tail of a row is equal to the Head value */
 list_sum([Sum | List]) :-
-    sum(List, #=, Sum)
+    sum(List, #=, Sum) % sum is defined in clpfd
 .
 
 /* Checks that the product of the Tail of a row is equal to the Head value*/
 list_prod([Prod | List]) :-
-    prod(List, #=, Prod)
+    prod(List, #=, Prod) % prod is not defined in clpfd
 .
 
 /* Checks that the product of the list is equal to the Prod value supplied
