@@ -70,18 +70,9 @@ puzzle_solution(Puzzle) :-
      * Ensure that the Sum Or Product of each row and column equals the header *
      ***************************************************************************/
     maplist(list_sum_or_prod, Rs_h),
-    maplist(list_sum_or_prod, Cs_h)
+    maplist(list_sum_or_prod, Cs_h),
 
-    /*
-    if unbound, bag, apply a row, repeat check until all rows are bound and valid
-    */
-    % (ground(Puzzle) ->
-    %     % do nothing, puzzle is solved
-    %     true
-    % ;
-    %     % not done yet, bind some variables
-    %     false
-    % )
+    maplist(label, Puzzle)
 .
 
 apply_bag(_, []).
