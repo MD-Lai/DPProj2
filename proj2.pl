@@ -75,7 +75,7 @@ diagonal([[R_d | _ ] | Rt], R_d) :- % True if Head of current row is same as R_d
 .
 
 /* Drops the first value of a list */
-tail([_ | T], T). % no case for empty list because empty list has no "tail"
+tail([ _ | T], T). % no case for empty list because empty list has no "tail"
 
 /* Drops the first value of every list in a list of lists */
 drop_heads([], []).
