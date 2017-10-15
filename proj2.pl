@@ -69,13 +69,13 @@ diagonals(Rs) :-
 
 /* Checks that diagonals have the same value as the value supplied (R_d) */
 diagonal([], _). % only reaches this case if everything before it is correct
-diagonal([[R_d|_] | Rt], R_d) :- % True if Head of current row is same as R_d
+diagonal([[R_d | _ ] | Rt], R_d) :- % True if Head of current row is same as R_d
     drop_heads(Rt, Rtd), % Remove first Col of the remaining lists
     diagonal(Rtd, R_d) % Check that sub square also has correct diagonals
 .
 
 /* Drops the first value of a list */
-tail([_|T], T). % no case for empty list because empty list has no "tail"
+tail([_ | T], T). % no case for empty list because empty list has no "tail"
 
 /* Drops the first value of every list in a list of lists */
 drop_heads([], []).
