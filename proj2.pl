@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Declarative Programming Project 2                                         *
  *                                                                           *
- * Der Hann Marvin Lai 754672                                                *
+ * Der Hann Marvin Lai                                                       *
  *                                                                           *
  * A set of Prolog predicates to solve a maths puzzle                        *
  * The puzzle is to solve a maths square where each row and column is EITHER:*
@@ -16,70 +16,53 @@
 :- ensure_loaded(library(clpfd)).
 
 /*****************************************************************************
- * Main Driver, Generates a solution for the Puzzle .                        *
- * Works by specifying the constraints                                       *
+ * Main Driver, Generates a solution for the Puzzle.                         *
+ * Works by specifying the constraints and domain,                           *
  * essentially creating a system of linear equations.                        *
  * Once all constraints are set,                                             *
  * binds variables that satisfy those constraints                            *
  *****************************************************************************/
 puzzle_solution(Puzzle) :-
-    /***********************************
-     * Checks that puzzle is a square  *
-     ***********************************/
+
+    % Checks that puzzle is a square
     % each row should have n elements = n rows
     maplist(same_length(Puzzle), Puzzle),
 
-    /************************************
-     * Extract Row values (not headers) *
-     ************************************/
+    % Extract Row values (not headers)
     % drop first row of Puzzle,
     tail(Puzzle, Rs_h),
     % drop first column of puzzle, leaving only the puzzle values
     drop_heads(Rs_h, Rs),
 
-    /*******************************************
-     * Check that values are within the domain *
-     *******************************************/
-    % check that the concatenation of Rows (no headers) can be composed of 1..9
+    % Check that values are within the required domain of 1..9
+    % true if concatenation of Rows (no headers) can be composed of 1..9
     append(Rs, Dom), Dom ins 1..9,
 
-    /*********************
-     * Unifies diagonals *
-     *********************/
+    % Unifies diagonals
     diagonals(Rs),
 
-    /********************************************
-     * Transpose Puzzle so Columns are now rows *
-     ********************************************/
+    % Transpose Puzzle so Columns are now rows
     transpose(Puzzle, PuzzleT),
 
-    /***************************
-     * Extract Column values   *
-     * Same Procedure as above *
-     ***************************/
+    % Extract Column values
+    % Same Procedure as Puzzle and Rs above
     tail(PuzzleT, Cs_h), drop_heads(Cs_h, Cs),
 
-    /*************************************************************************
-     * Ensure that Row and column values are all composed of distinct values *
-     *************************************************************************/
+    % Ensure that Row and column values are all composed of distinct values
     maplist(all_distinct, Rs),
     maplist(all_distinct, Cs),
 
-    /*************************************************************************
-     * Ensure that the Sum Or Product of each row and column equals the head *
-     *************************************************************************/
+    % Ensure that the Sum Or Product of each row and column equals the head
     maplist(list_sum_or_prod, Rs_h),
     maplist(list_sum_or_prod, Cs_h),
 
-    /*****************************************************************
-     * Grounds variables according to the above constraints          *
-     * IF there is only one solution,                                *
-     * there will be enough constraints to produce only one solution *
-     *****************************************************************/
+    % Grounds variables according to the above constraints and domain
+    % IF there is only one solution,
+    % there will be enough constraints to produce only one solution
     maplist(label, Puzzle)
 .
 
-/* Initialises check, passes first value and row through to diagonal */
+/* Initialiser for diagonal, passes first value and row through to diagonal */
 diagonals(Rs) :-
     Rs = [[R_d | _ ] | _ ], diagonal(Rs, R_d)
 .
@@ -95,7 +78,7 @@ diagonal([[R_d|_] | Rt], R_d) :- % True if Head of current row is same as R_d
 tail([_|T], T). % no case for empty list because empty list has no "tail"
 
 /* Drops the first value of every list in a list of lists */
-drop_heads([],[]).
+drop_heads([], []).
 drop_heads(R, R_nh) :-
     transpose(R, RT), % transpose it so first column is now first row
     tail(RT, RT_t), % drop the new first row
